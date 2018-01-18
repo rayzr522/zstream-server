@@ -1,0 +1,31 @@
+{
+  "name": "zstream-server",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "css": "./node_modules/.bin/postcss -d static/css -w static/rawcss static/rawcss/*.css --use autoprefixer"
+  },
+  "files": [
+    "src",
+    "bin",
+    "static",
+    "views"
+  ],
+  "bin": {
+    "zstream": "./bin/zstream"
+  },
+  "dependencies": {
+    "autoprefixer": "^6.7.2",
+    "body-parser": "^1.16.0",
+    "chalk": "^1.1.3",
+    "cookie-parser": "~1.4.3",
+    "express": "^4.14.1",
+    "hbs": "~4.0.0",
+    "mime-types": "^2.1.14",
+    "musicmetadata": "^2.0.5",
+    "postcss-middleware": "^1.1.3",
+    "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {}
+}

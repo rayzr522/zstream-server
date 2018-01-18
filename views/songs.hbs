@@ -1,0 +1,41 @@
+<link rel='stylesheet' href='/css/player.css' />
+
+<div class="container" id="songs">
+    {{#each songs}}
+    <div class="song" data-id="{{id}}" data-title="{{title}}" data-artist="{{artist}}" data-album="{{album}}">
+        <img src="/artwork/{{id}}" class="cover no-select"></img>
+        <div>
+            <h1>{{title}}</h1>
+            <h3>{{artist}} - {{album}}</h2>
+        </div>
+    </div>
+    {{/each}}
+</div>
+
+<div class="container no-select" id="controls" style="display:none">
+<div id="song-info" hidden>
+    <b><span id="track-title"></b> - <span id="track-artist"></span> <i>(<span id="track-album"></span>)</i>
+    <hr>
+</div>
+<div>
+    <span id="loading">
+        <i class="fa fa-fw fa-2x fa-spin fa-refresh" aria-hidden="true"></i>
+        <span class="sr-only">Loading...</span>
+    </span>
+
+    <i id="ctrl-stop" class="control fa fa-fw fa-2x fa-stop" aria-hidden="true"></i>
+    <i id="ctrl-prev" class="control fa fa-fw fa-2x fa-fast-backward" aria-hidden="true"></i>
+    <i id="ctrl-playpause" class="control fa fa-fw fa-2x fa-pause" aria-hidden="true"></i>
+    <i id="ctrl-next" class="control fa fa-fw fa-2x fa-fast-forward" aria-hidden="true"></i>
+
+    <i id="setting-repeat" class="control setting fa fa-fw fa-2x fa-repeat" aria-hidden="true"></i>
+
+    <div class="progress-bar">
+        <div id="song-progress" class="progress"></div>
+    </div>
+</div>
+</div>
+
+<audio id="player" preload="none" autoplay></audio>
+
+<script src="/js/player.js"></script>
