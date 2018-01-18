@@ -9,7 +9,7 @@ const fs = require('fs');
 const postcssMiddleware = require('postcss-middleware');
 
 const utils = require('./src/utils');
-const {info} = require('./src/debug');
+const { info } = require('./src/debug');
 
 const base = path.resolve('.');
 const songs = require('./src/songs')(base);
