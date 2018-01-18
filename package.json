@@ -2,6 +2,7 @@
   "name": "zstream-server",
   "description": "A music streaming server written from scratch to stream your home library",
   "version": "0.0.2",
+  "license": "MIT",
   "scripts": {
     "start": "node ./bin/zstream",
     "css": "./node_modules/.bin/postcss -d static/css -w static/rawcss static/rawcss/*.css --use autoprefixer"
