@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./bin/zstream",
     "css": "./node_modules/.bin/postcss -d static/css -w static/rawcss static/rawcss/*.css --use autoprefixer",
-    "lint": "eslint app.js src static/js"
+    "lint": "eslint app.js src static/js bin"
   },
   "husky": {
     "hooks": {
