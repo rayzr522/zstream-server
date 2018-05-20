@@ -31,7 +31,7 @@ module.exports = function (base) {
                 artwork = {
                     type: mime.lookup(meta.picture[0].format),
                     data: meta.picture[0].data
-                }
+                };
                 // artwork = `data:image/${meta.picture[0].format};base64,${meta.picture[0].data.toString('base64')}`;
             }
 

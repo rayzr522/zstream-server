@@ -1,12 +1,11 @@
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
-const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mime = require('mime-types');
 const chalk = require('chalk');
-const fs = require('fs');
 const postcssMiddleware = require('postcss-middleware');
+// const compression = require('compression');
 
 const utils = require('./src/utils');
 const { info } = require('./src/debug');
@@ -16,11 +15,14 @@ const songs = require('./src/songs')(base);
 
 const app = express();
 
+// Loads about 50ms faster without (on 127.0.0.1), probably due to Network usage vs. CPU usage
+// app.use(compression());
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -31,6 +33,7 @@ app.use('/css', postcssMiddleware({
     }
 }));
 app.use(express.static(path.join(__dirname, 'static')));
+app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
 function sc(item1, item2) {
     return !item1 || !item2 || item1.toLowerCase().indexOf(item2.toLowerCase()) > -1;
@@ -77,7 +80,7 @@ app.get('/artwork/:track', (req, res) => {
     }
     var art = songs[parseInt(req.params.track)].artwork;
     if (typeof art === 'object') {
-        res.header('Content-Type', art.type)
+        res.header('Content-Type', art.type);
         res.header('Content-Length', art.data.length);
         res.send(art.data);
     } else if (typeof art === 'string') {
@@ -94,7 +97,7 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,

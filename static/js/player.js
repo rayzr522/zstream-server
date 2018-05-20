@@ -1,3 +1,5 @@
+/* global $ */
+
 function onClick(element, callback) {
     element.on({ 'click': callback, 'touchend': callback });
 }
@@ -17,7 +19,7 @@ var player = {
 
         this.context = $('#player');
 
-        this.context.on('canplay', this.startPlayer.bind(this))
+        this.context.on('canplay', this.startPlayer.bind(this));
 
         this.context.on('timeupdate', function () {
             var raw = this.raw();
@@ -103,7 +105,7 @@ var player = {
         if (this.current.index() < this.current.siblings().length)
             this.play(this.current.next('.song'));
         else
-            this.play(this.current.siblings().first())
+            this.play(this.current.siblings().first());
     },
     previous: function () {
         if (!this.context) this.init();
@@ -118,9 +120,9 @@ var player = {
     },
     button: function (id, method) {
         method = this[method].bind(this);
-        $("#ctrl-" + id).click(function () { method(); });
+        $('#ctrl-' + id).click(function () { method(); });
     }
-}
+};
 
 var ui = {
     elements: [],
@@ -147,7 +149,7 @@ var ui = {
             }
         });
     }
-}
+};
 
 player.button('stop', 'stop');
 player.button('prev', 'previous');
