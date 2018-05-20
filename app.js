@@ -60,25 +60,25 @@ app.get('/songs', (req, res) => {
 });
 
 app.get('/track/:track', (req, res) => {
-    var song = songs[parseInt(req.params.track)];
+    let song = songs[parseInt(req.params.track)];
     if (!song) {
         res.header('Content-Type', 'text/raw');
         res.send('Invalid track id');
         return;
     }
-    var type = mime.lookup(song.location);
+    let type = mime.lookup(song.location);
     res.header('Content-Type', type);
     res.sendFile(song.location);
 });
 
 app.get('/artwork/:track', (req, res) => {
-    var song = songs[parseInt(req.params.track)];
+    let song = songs[parseInt(req.params.track)];
     if (!song) {
         res.header('Content-Type', 'text/raw');
         res.send('Invalid track id');
         return;
     }
-    var art = songs[parseInt(req.params.track)].artwork;
+    let art = songs[parseInt(req.params.track)].artwork;
     if (typeof art === 'object') {
         res.header('Content-Type', art.type);
         res.header('Content-Length', art.data.length);
@@ -92,7 +92,7 @@ app.get('/artwork/:track', (req, res) => {
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+    let err = new Error('Not Found');
     err.status = 404;
     next(err);
 });

@@ -4,7 +4,7 @@ function onClick(element, callback) {
     element.on({ 'click': callback, 'touchend': callback });
 }
 
-var player = {
+let player = {
     playURL: function (url) {
         this.context.attr('src', url);
     },
@@ -22,13 +22,13 @@ var player = {
         this.context.on('canplay', this.startPlayer.bind(this));
 
         this.context.on('timeupdate', function () {
-            var raw = this.raw();
+            let raw = this.raw();
             $('.progress').css('width', (raw.currentTime / raw.duration * 100) + '%');
         }.bind(this));
 
         onClick($('.progress-bar'), function (event) {
             // Handle click OR touch position
-            var off = event.originalEvent.touches
+            let off = event.originalEvent.touches
                 ? event.originalEvent.touches[0].pageX - $('.progress-bar').position().left
                 : event.originalEvent.offsetX;
             // Set the current play-time
@@ -43,9 +43,9 @@ var player = {
         $('#loading').animate({ 'opacity': 0 }, 300);
         $('#song-info').slideDown();
 
-        var title = this.current.attr('data-title');
-        var artist = this.current.attr('data-artist');
-        var album = this.current.attr('data-album');
+        let title = this.current.attr('data-title');
+        let artist = this.current.attr('data-artist');
+        let album = this.current.attr('data-album');
 
         $('#track-title').text(title);
         $('#track-artist').text(artist);
@@ -124,7 +124,7 @@ var player = {
     }
 };
 
-var ui = {
+const ui = {
     elements: [],
     get: function (id) {
         return this.elements.find(function (e) { return e.id === id; });

@@ -7,7 +7,8 @@
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaVersion": 8
     },
     "rules": {
         "indent": [
@@ -29,6 +30,13 @@
         "arrow-parens": [
             "error",
             "as-needed"
+        ],
+        "eol-last": [
+            "warn",
+            "always"
+        ],
+        "no-var": [
+            "warn"
         ]
     }
 }
