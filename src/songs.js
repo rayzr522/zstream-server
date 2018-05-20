@@ -3,58 +3,14 @@ const path = require('path');
 const fs = require('fs');
 const mm = require('musicmetadata');
 const mime = require('mime-types');
-
-module.exports = function (base) {
-    let songs = [];
-    let id = 0;
-
-    recurse(base, file => !file.startsWith('.')).forEach(file => {
-        const parts = file.split(path.sep);
-
-        if (parts.length < 3) {
-            // Invalid file, let's get out.
-            return;
-        }
-
-        const artist = parts[0];
-        const album = parts[1];
-        const title = parts[2].substr(0, parts[2].lastIndexOf('.'));
-        const location = path.join(base, file);
-        let artwork = 'https://placehold.it/150x150';
-
-        if (!/(.mp3|.m4a|.wav)$/i.test(file)) {
-            return;
-        }
-
-        mm(fs.createReadStream(file), (err, meta) => {
-            if (meta.picture && meta.picture.length > 0) {
-                artwork = {
-                    type: mime.lookup(meta.picture[0].format),
-                    data: meta.picture[0].data
-                };
-                // artwork = `data:image/${meta.picture[0].format};base64,${meta.picture[0].data.toString('base64')}`;
-            }
-
-            songs.push({
-                id: id++,
-                title: meta.title || title,
-                artist: meta.artist[0] || artist,
-                album: meta.album || album,
-                artwork,
-                location
-            });
-        });
-    });
-
-    return songs;
-};
+const { warn, error, variable } = require('./debug');
 
 /**
  * @param {string} folder The folder to recurse through
  * @param {function} filter The file-filter function
  * @param {number} depth The depth to recurse
  */
-function recurse(folder, filter, depth = 2) {
+const recurse = (folder, filter, depth = 2) => {
     let results = [];
 
     fs.readdirSync(folder).forEach(file => {
@@ -68,4 +24,64 @@ function recurse(folder, filter, depth = 2) {
     });
 
     return results;
-}
+};
+
+const fetchMetadata = file => new Promise((resolve, reject) => mm(fs.createReadStream(file), (err, meta) => err ? reject(err) : resolve(meta)));
+
+module.exports = base => {
+    let songs = [];
+    let id = 0;
+
+    recurse(base, file => !file.startsWith('.')).forEach(async file => {
+        if (!/(.mp3|.m4a|.wav)$/i.test(file)) {
+            return;
+        }
+
+        const parts = file.split(path.sep);
+
+        if (parts.length < 3) {
+            // Can't determine info from path, just clear this data.
+            parts.splice(0);
+        }
+
+
+        const location = path.join(base, file);
+
+        let meta;
+
+        try {
+            meta = await fetchMetadata(location);
+        } catch (err) {
+            if (err.message === 'Could not find metadata header') {
+                warn(`Could not find metadata for '${variable(file)}'`);
+            } else {
+                error(`Failed to load metadata for '${variable(file)}':\n${err}`);
+            }
+            return;
+        }
+
+        let title = meta.title || (parts[2] ? parts[2].substr(0, parts[2].lastIndexOf('.')) : '') || path.basename(file);
+        let artist = meta.artist[0] || parts[0] || 'Unknown';
+        let album = meta.album || parts[1] || 'Unknown';
+        let artwork = 'https://placehold.it/150x150';
+
+        if (meta.picture && meta.picture.length > 0) {
+            artwork = {
+                type: mime.lookup(meta.picture[0].format),
+                data: meta.picture[0].data
+            };
+            // artwork = `data:image/${meta.picture[0].format};base64,${meta.picture[0].data.toString('base64')}`;
+        }
+
+        songs.push({
+            id: id++,
+            title,
+            artist,
+            album,
+            artwork,
+            location
+        });
+    });
+
+    return songs;
+};

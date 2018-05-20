@@ -9,7 +9,7 @@ const postcssMiddleware = require('postcss-middleware');
 const utils = require('./src/utils');
 const { info, variable } = require('./src/debug');
 
-const base = path.resolve('.');
+const base = process.env.ZSTREAM_MUSIC_DIR || path.resolve('.');
 const songs = require('./src/songs')(base);
 
 const app = express();
