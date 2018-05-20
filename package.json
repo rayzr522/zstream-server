@@ -8,6 +8,11 @@
     "css": "./node_modules/.bin/postcss -d static/css -w static/rawcss static/rawcss/*.css --use autoprefixer",
     "lint": "eslint app.js src static/js"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint"
+    }
+  },
   "files": [
     "src",
     "bin",
@@ -35,6 +40,7 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
-    "eslint": "^4.19.1"
+    "eslint": "^4.19.1",
+    "husky": "^0.14.3"
   }
 }
