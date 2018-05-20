@@ -1,14 +1,13 @@
-const express = require('express');
 const path = require('path');
-const favicon = require('serve-favicon');
+const express = require('express');
 const bodyParser = require('body-parser');
+const favicon = require('serve-favicon');
 const mime = require('mime-types');
-const chalk = require('chalk');
 const postcssMiddleware = require('postcss-middleware');
 // const compression = require('compression');
 
 const utils = require('./src/utils');
-const { info } = require('./src/debug');
+const { info, variable } = require('./src/debug');
 
 const base = path.resolve('.');
 const songs = require('./src/songs')(base);
@@ -47,11 +46,11 @@ function findSongs(req) {
 
 app.get('/', (req, res) => {
     res.render('index', { title: 'ZStream - Home', songs: songs.length });
-    info(`Display home page for ${chalk.yellow(utils.cleanIP(req.socket.remoteAddress))}`);
+    info(`Display home page for ${variable(utils.cleanIP(req.socket.remoteAddress))}`);
 });
 
 app.get('/songs', (req, res) => {
-    info(`Displaying songs page for ${chalk.yellow(utils.cleanIP(req.socket.remoteAddress))} ${req.query ? `with filter ${chalk.yellow(utils.compactString(req.query))}` : ''}`);
+    info(`Displaying songs page for ${variable(utils.cleanIP(req.socket.remoteAddress))} ${req.query ? `with filter ${variable(utils.compactString(req.query))}` : ''}`);
 
     res.render('songs', {
         title: 'ZStream - Songs',
