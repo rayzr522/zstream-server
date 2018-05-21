@@ -4,6 +4,17 @@ function onClick(element, callback) {
     element.on({ 'click': callback, 'touchend': callback });
 }
 
+function fmtTime(input) {
+    // Handle invalid inputs
+    if (isNaN(input)) return '0:00';
+
+    let minutes = (input / 60).toFixed(0);
+    let seconds = (input % 60).toFixed(0);
+    // Zero-pad seconds
+    if (seconds.length < 2) seconds = '0' + seconds;
+    return minutes + ':' + seconds;
+}
+
 let songManager = {
     init: function () {
         let songs = [];
@@ -67,6 +78,7 @@ let player = {
 
         this.context.on('timeupdate', function () {
             let raw = this.raw();
+            $('#track-progress').text(`${fmtTime(raw.currentTime)}/${fmtTime(raw.duration)}`);
             this.setProgress(raw.currentTime / raw.duration * 100);
         }.bind(this));
 
@@ -219,11 +231,6 @@ ui.toggler('ctrl-playpause', 'play_arrow', 'pause');
 
 onClick($('.cover'), function () {
     // player.playPause($(this).parents('.song').attr('data-id'));
-});
-
-$('#songs').niceScroll({
-    cursorwidth: '0.5em',
-    cursorheight: '1.5em'
 });
 
 player.init();

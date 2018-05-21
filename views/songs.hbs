@@ -78,47 +78,50 @@
 
 <link rel='stylesheet' href='/css/player.css' />
 
-<div class="container no-select" id="controls">
-    <div id="song-info" class="row" hidden>
-        <b>
-            <span id="track-title">
-        </b> -
-        <span id="track-artist"></span>
-        <i>(
-            <span id="track-album"></span>)</i>
-        <hr>
-    </div>
-    <div class="row center">
-        <div id="loading" hidden>
-
-            <span class="sr-only">
-                <i class="material-icons" aria-hidden="true">refresh</i>Loading...</span>
+<div class="section z-depth-1 modal-fixed-footer">
+    <div class="container center-align" id="controls">
+        <div id="song-info" class="row" hidden>
+            <div class="section">
+                <span id="track-title" class="blue-text"></span>
+                |
+                <span id="track-artist"></span>
+                |
+                <span id="track-album" class="light"></span>
+            </div>
         </div>
+        <span id="track-progress" class="light"></span>
+        <div class="row center">
+            <div id="loading" hidden>
 
-        <div class="col s8 offset-s2">
-            <a id="ctrl-prev" class="player-ctrl btn-flat">
-                <i class="material-icons">skip_previous</i>
-            </a>
-            <a id="ctrl-stop" class="player-ctrl btn-flat">
-                <i class="material-icons">stop</i>
-            </a>
-            <a id="ctrl-playpause" class="player-ctrl btn-flat">
-                <i class="material-icons">play_arrow</i>
-            </a>
-            <a id="ctrl-next" class="player-ctrl btn-flat">
-                <i class="material-icons">skip_next</i>
-            </a>
-        </div>
+                <span class="sr-only">
+                    <i class="material-icons" aria-hidden="true">refresh</i>Loading...</span>
+            </div>
 
-        <div class="col s2">
-            <a id="setting-repeat" class="btn-flat right">
-                <i class="material-icons blue-text">repeat</i>
-            </a>
-        </div>
+            <div class="col s8 offset-s2">
+                <a id="ctrl-prev" class="player-ctrl btn-flat">
+                    <i class="material-icons">skip_previous</i>
+                </a>
+                <a id="ctrl-stop" class="player-ctrl btn-flat">
+                    <i class="material-icons">stop</i>
+                </a>
+                <a id="ctrl-playpause" class="player-ctrl btn-flat">
+                    <i class="material-icons">play_arrow</i>
+                </a>
+                <a id="ctrl-next" class="player-ctrl btn-flat">
+                    <i class="material-icons">skip_next</i>
+                </a>
+            </div>
+
+            <div class="col s2">
+                <a id="setting-repeat" class="btn-flat right">
+                    <i class="material-icons blue-text">repeat</i>
+                </a>
+            </div>
 
 
-        <div class="progress">
-            <div id="song-progress" class="determinate"></div>
+            <div class="progress">
+                <div id="song-progress" class="determinate"></div>
+            </div>
         </div>
     </div>
 </div>
