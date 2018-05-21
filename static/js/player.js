@@ -54,24 +54,28 @@ let player = {
         return this.raw().paused;
     },
     init: function () {
-        $('#controls').slideDown();
-
         this.context = $('#player');
+        this.setProgress(0);
 
-        this.context.on('canplay', this.startPlayer.bind(this));
+        this.context.on('canplay', function () {
+            if (this.context.attr('src')) {
+                // Prevent the player from restarting when the stop button is pressed
+                this.startPlayer();
+            }
+        }.bind(this));
 
         this.context.on('timeupdate', function () {
             let raw = this.raw();
-            $('.progress').css('width', (raw.currentTime / raw.duration * 100) + '%');
+            this.setProgress(raw.currentTime / raw.duration * 100);
         }.bind(this));
 
-        onClick($('.progress-bar'), function (event) {
+        onClick($('.progress'), function (event) {
             // Handle click OR touch position
             let off = event.originalEvent.touches
                 ? event.originalEvent.touches[0].pageX - $('.progress-bar').position().left
                 : event.originalEvent.offsetX;
             // Set the current play-time
-            this.raw().currentTime = off / $('.progress-bar').width() * this.raw().duration;
+            this.raw().currentTime = off / $('.progress').width() * this.raw().duration;
         }.bind(this));
 
         this.context.on('ended', function () {
@@ -93,8 +97,10 @@ let player = {
         ui.get('ctrl-playpause').turnOff();
         this.raw().play();
     },
+    setProgress: function (percent) {
+        $('#song-progress').css('width', percent + '%');
+    },
     play: function (song) {
-        if (!this.context) this.init();
         // Get by ID
         song = songManager.resolveSong(song) || this.current;
 
@@ -122,7 +128,6 @@ let player = {
         ui.get('ctrl-playpause').turnOn();
     },
     playPause: function (song) {
-        if (!this.context) this.init();
         // Get by ID
         song = songManager.resolveSong(song) || this.current;
 
@@ -140,7 +145,6 @@ let player = {
         $('#song-info').slideUp();
     },
     next: function () {
-        if (!this.context) this.init();
         if (!this.current) return;
         if (this.current.next)
             this.play(this.current.next);
@@ -148,7 +152,6 @@ let player = {
             this.play(songManager.first());
     },
     previous: function () {
-        if (!this.context) this.init();
         if (!this.current) return;
         if (this.current.prev)
             this.play(this.current.prev);
@@ -207,4 +210,5 @@ $('#songs').niceScroll({
     cursorheight: '1.5em'
 });
 
+player.init();
 songManager.init();
