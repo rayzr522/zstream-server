@@ -63,9 +63,10 @@
                             <span class="light">{{artist}} - {{album}}</span>
                         </div>
                         <div class="row">
-                            <a class="waves-effect waves-light btn">
+                            <a class="waves-effect waves-light btn" onclick="player.playPause({{id}})">
                                 <i class="material-icons left">play_arrow</i>play</a>
-                            <a class="waves-effect waves-light btn"><i class="material-icons left">favorite</i>favorite</a>
+                            <a class="waves-effect waves-light btn">
+                                <i class="material-icons left">favorite</i>favorite</a>
                         </div>
                     </div>
                 </div>
@@ -74,6 +75,8 @@
         {{/each}}
     </div>
 </div>
+
+<link rel='stylesheet' href='/css/player.css' />
 
 <div class="container no-select" id="controls" style="display:none">
     <div id="song-info" hidden>
