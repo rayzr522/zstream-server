@@ -90,7 +90,10 @@
 
 <link rel='stylesheet' href='/css/player.css' />
 
-<div class="section z-depth-1">
+<div class="white section z-depth-2 song-control-section">
+    <div class="row center">
+        <i class="small material-icons" onclick="$('#controls').slideToggle();$(this).text($(this).text() === 'arrow_downward' ? 'arrow_upward' : 'arrow_downward')">arrow_downward</i>
+    </div>
     <div class="container center-align" id="controls">
         <div id="song-info" class="row" hidden>
             <div class="section">
