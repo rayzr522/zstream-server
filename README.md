@@ -2,6 +2,8 @@
 
 > A music streaming server written from scratch to stream your home library
 
+![Screenshot](res/screenshot.png)
+
 ## Installation
 
 ```bash
