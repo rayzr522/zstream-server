@@ -11,7 +11,8 @@ const { info, variable } = require('./src/debug');
 const songLoader = require('./src/song-loader');
 
 const base = process.env.ZSTREAM_MUSIC_DIR || path.resolve('.');
-let songs = songLoader(base);
+let songs = [];
+reloadLibrary();
 
 const app = express();
 
@@ -45,13 +46,17 @@ function findSongs(req) {
     });
 }
 
+async function reloadLibrary() {
+    songs = await songLoader(base);
+}
+
 app.get('/', (req, res) => {
     res.render('index', { title: 'ZStream - Home', songs: songs.length });
     info(`Display home page for ${variable(utils.cleanIP(req.socket.remoteAddress))}`);
 });
 
-app.get('/reload', (req, res) => {
-    songs = songLoader(base);
+app.get('/reload', async (req, res) => {
+    await reloadLibrary();
     res.header('Content-Type', 'text/raw');
     res.end('Success');
 });
