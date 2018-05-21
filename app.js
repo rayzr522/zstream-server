@@ -8,9 +8,10 @@ const postcssMiddleware = require('postcss-middleware');
 
 const utils = require('./src/utils');
 const { info, variable } = require('./src/debug');
+const songLoader = require('./src/song-loader');
 
 const base = process.env.ZSTREAM_MUSIC_DIR || path.resolve('.');
-const songs = require('./src/songs')(base);
+let songs = songLoader(base);
 
 const app = express();
 
@@ -47,6 +48,12 @@ function findSongs(req) {
 app.get('/', (req, res) => {
     res.render('index', { title: 'ZStream - Home', songs: songs.length });
     info(`Display home page for ${variable(utils.cleanIP(req.socket.remoteAddress))}`);
+});
+
+app.get('/reload', (req, res) => {
+    songs = songLoader(base);
+    res.header('Content-Type', 'text/raw');
+    res.end('Success');
 });
 
 app.get('/songs', (req, res) => {
