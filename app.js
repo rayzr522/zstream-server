@@ -42,7 +42,7 @@ function sc(item1, item2) {
 
 function findSongs(req) {
     return songs.filter(s => {
-        return sc(s.title, req.title) && sc(s.artist, req.artist) && sc(s.album, req.album);
+        return (sc(s.title, req.q) || sc(s.artist, req.q) || sc(s.album, req.q)) && sc(s.title, req.title) && sc(s.artist, req.artist) && sc(s.album, req.album);
     });
 }
 
