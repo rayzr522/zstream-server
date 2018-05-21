@@ -55,7 +55,8 @@ let player = {
     },
     init: function () {
         this.context = $('#player');
-        this.setProgress(0);
+        // Simulate hitting the stop button to initialize everything properly
+        this.setCurrent();
 
         this.context.on('canplay', function () {
             if (this.context.attr('src')) {
@@ -100,6 +101,24 @@ let player = {
     setProgress: function (percent) {
         $('#song-progress').css('width', percent + '%');
     },
+    setCurrent: function (song) {
+        if (!song) {
+            // Clear variable
+            this.current = null;
+
+            // Clear all audio settings
+            this.context.attr('src', null);
+            this.raw().currentTime = 0;
+            this.setProgress(0);
+
+            // Update UI to reflect state
+            $('.player-ctrl').attr('disabled', true);
+            $('#song-info').slideUp();
+        } else {
+            this.current = songManager.resolveSong(song);
+            $('.player-ctrl').attr('disabled', false);
+        }
+    },
     play: function (song) {
         // Get by ID
         song = songManager.resolveSong(song) || this.current;
@@ -117,10 +136,8 @@ let player = {
 
             $('#loading').animate({ 'opacity': 1 }, 300);
 
-            // if (this.current) this.current.find('.cover').removeClass('current-song');
-            // song.find('.cover').addClass('current-song');
             this.last = this.current;
-            this.current = song;
+            this.setCurrent(song);
         }
     },
     pause: function () {
@@ -140,9 +157,8 @@ let player = {
     },
     stop: function () {
         this.pause();
-        this.context.attr('src', null);
-        this.raw().currentTime = 0;
-        $('#song-info').slideUp();
+        // Clear song
+        this.setCurrent();
     },
     next: function () {
         if (!this.current) return;
