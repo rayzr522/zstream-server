@@ -47,7 +47,8 @@ module.exports = base => {
 
         const location = path.join(base, file);
 
-        let meta;
+        // Placeholder to avoid undefined errors
+        let meta = { artist: [] };
 
         try {
             meta = await fetchMetadata(location);
@@ -56,8 +57,8 @@ module.exports = base => {
                 warn(`Could not find metadata for '${variable(file)}'`);
             } else {
                 error(`Failed to load metadata for '${variable(file)}':\n${err}`);
+                return;
             }
-            return;
         }
 
         let title = meta.title || (parts[2] ? parts[2].substr(0, parts[2].lastIndexOf('.')) : '') || path.basename(file);
