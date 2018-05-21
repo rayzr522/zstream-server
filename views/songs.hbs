@@ -79,7 +79,7 @@
 <link rel='stylesheet' href='/css/player.css' />
 
 <div class="container no-select" id="controls" style="display:none">
-    <div id="song-info" hidden>
+    <div id="song-info" class="row" hidden>
         <b>
             <span id="track-title">
         </b> -
@@ -88,16 +88,31 @@
             <span id="track-album"></span>)</i>
         <hr>
     </div>
-    <div>
-        <span id="loading">
-            <i class="fa fa-fw fa-2x fa-spin fa-refresh" aria-hidden="true"></i>
-            <span class="sr-only">Loading...</span>
-        </span>
+    <div class="row center">
+        <div id="loading" hidden>
 
+            <span class="sr-only">
+                <i class="material-icons" aria-hidden="true">refresh</i>Loading...</span>
+        </div>
+
+        {{!--
         <i id="ctrl-stop" class="control fa fa-fw fa-2x fa-stop" aria-hidden="true"></i>
         <i id="ctrl-prev" class="control fa fa-fw fa-2x fa-fast-backward" aria-hidden="true"></i>
         <i id="ctrl-playpause" class="control fa fa-fw fa-2x fa-pause" aria-hidden="true"></i>
-        <i id="ctrl-next" class="control fa fa-fw fa-2x fa-fast-forward" aria-hidden="true"></i>
+        <i id="ctrl-next" class="control fa fa-fw fa-2x fa-fast-forward" aria-hidden="true"></i> --}}
+
+        <a id="ctrl-prev" class="btn-flat">
+            <i class="material-icons">skip_previous</i>
+        </a>
+        <a id="ctrl-stop" class="btn-flat">
+            <i class="material-icons">stop</i>
+        </a>
+        <a id="ctrl-playpause" class="btn-flat">
+            <i class="material-icons">play_arrow</i>
+        </a>
+        <a id="ctrl-next" class="btn-flat">
+            <i class="material-icons">skip_next</i>
+        </a>
 
         <i id="setting-repeat" class="control setting fa fa-fw fa-2x fa-repeat" aria-hidden="true"></i>
 

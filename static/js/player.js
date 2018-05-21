@@ -176,7 +176,7 @@ const ui = {
             on: false,
             setState: function (state) {
                 this.on = state;
-                this.e.removeClass(state ? off : on).addClass(state ? on : off);
+                this.e.children('i').text(state ? on : off);
             },
             turnOn: function () {
                 this.setState(true);
@@ -196,7 +196,7 @@ player.button('prev', 'previous');
 player.button('playpause', 'playPause');
 player.button('next', 'next');
 
-ui.toggler('ctrl-playpause', 'fa-play', 'fa-pause');
+ui.toggler('ctrl-playpause', 'play_arrow', 'pause');
 
 onClick($('.cover'), function () {
     // player.playPause($(this).parents('.song').attr('data-id'));
