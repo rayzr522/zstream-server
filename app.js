@@ -79,7 +79,8 @@ app.get('/track/:track', (req, res) => {
     }
     let type = mime.lookup(song.location);
     res.header('Content-Type', type);
-    res.sendFile(song.location);
+    info(`Sending song: '${variable(song.location)}'`);
+    res.sendFile(path.resolve('.', song.location));
 });
 
 app.get('/artwork/:track', (req, res) => {
