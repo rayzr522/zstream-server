@@ -1,7 +1,7 @@
 {
   "name": "zstream-server",
   "description": "A music streaming server written from scratch to stream your home library",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "scripts": {
     "start": "node ./bin/zstream",
