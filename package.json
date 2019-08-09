@@ -5,7 +5,13 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./bin/zstream",
-    "css": "./node_modules/.bin/postcss -d static/css -w static/rawcss static/rawcss/*.css --use autoprefixer"
+    "css": "./node_modules/.bin/postcss -d static/css -w static/rawcss static/rawcss/*.css --use autoprefixer",
+    "lint": "eslint app.js src static/js bin/zstream"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint"
+    }
   },
   "files": [
     "src",
@@ -21,12 +27,22 @@
     "autoprefixer": "^6.7.2",
     "body-parser": "^1.16.0",
     "chalk": "^1.1.3",
+    "compression": "^1.7.2",
     "cookie-parser": "~1.4.3",
     "express": "^4.14.1",
+    "font-awesome": "^4.7.0",
     "hbs": "~4.0.0",
+    "jquery": "^3.3.1",
+    "material-icons": "^0.2.3",
+    "materialize-css": "^1.0.0-rc.1",
     "mime-types": "^2.1.14",
+    "modern-normalize": "^0.4.0",
     "musicmetadata": "^2.0.5",
     "postcss-middleware": "^1.1.3",
     "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "husky": "^1.0.0-rc.6"
   }
 }

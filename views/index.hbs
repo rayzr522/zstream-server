@@ -1,5 +1,32 @@
-<div class="container">
-    <h1>Welcome to <b>ZStream</b></h1>
-    <p><i>ZStream</i> is a custom media hub that can be run on any computer.</p>
-    <p>This <i>ZStream</i> instance is connected to <b>{{songs}}</b> songs.</p>
+<div class="section">
+    <div class="container">
+        <h1 class="header center light-blue-text">ZStream</h1>
+        <div class="divider"></div>
+        <div class="row center">
+            <h5 class="header col s12 light">A custom lightweight media hub.</h5>
+        </div>
+    </div>
 </div>
+
+<div class="section blue white-text">
+    <div class="container">
+        <h3>Stats</h3>
+        <div class="row black-text">
+            <div class="col white s4 z-depth-1">
+                <div class="section">
+                    <h5>Songs</h5>
+                    <div class="divider"></div>
+                    <br> Currently connected to
+                    <code>{{songs}}</code> songs.
+                </div>
+
+                <div class="section">
+                    <a class="waves-effect waves-light btn" id="reload-songs">
+                        <i class="material-icons left">refresh</i>Reload library</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/home.js"></script>

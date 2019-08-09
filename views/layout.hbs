@@ -5,42 +5,33 @@
     <title>{{title}}</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/node_modules/modern-normalize/modern-normalize.css" />
+    <link rel="stylesheet" href="/node_modules/materialize-css/dist/css/materialize.min.css">
+    <link rel="stylesheet" href="/node_modules/material-icons/iconfont/material-icons.css">
 
-    <link rel='stylesheet' href='https://necolas.github.io/normalize.css/5.0.0/normalize.css' />
-    <link rel='stylesheet' href='/css/style.css' />
-
-    <script src="https://use.fontawesome.com/a5c504769b.js"></script>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous"></script>
-    <script src="/lib/jquery.nicescroll.min.js"></script>
-
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
 </head>
 
 <body>
-
-    <div id="navbar" class="container navbar-container" hidden=true>
-
-        <ul class="navbar">
-            <li class="navbar-item"><a href="/">Home Page</a></li>
-            <li class="navbar-item" id="toggle-search"><a href="#">Search</a></li>
-        </ul>
-        <div id="search" hidden=true>
-            <form action="/songs" method="get">
-                <input class="form-item" type="text" name="title" placeholder="Title...">
-                <input class="form-item" type="text" name="artist" placeholder="Artist...">
-                <input class="form-item" type="text" name="album" placeholder="Album...">
-                <input class="form-item" type="submit" value="Search" target="_blank">
-            </form>
-        </div>
+    <div class="navbar-fixed">
+        <nav class="teal">
+            <div class="nav-wrapper">
+                <form action="/songs">
+                    <div class="input-field">
+                        <input id="search" type="search" name="q" required>
+                        <label class="label-icon" for="search">
+                            <i class="material-icons">search</i>
+                        </label>
+                        <i class="material-icons">close</i>
+                    </div>
+                </form>
+            </div>
+        </nav>
     </div>
 
     {{{body}}}
 
-    <script type="text/javascript">
-        $('#toggle-search').click(function () { $('#search').slideToggle(); });
-        $('#navbar').fadeIn(); 
-    </script>
-
+    <script src="/node_modules/materialize-css/dist/js/materialize.min.js"></script>
 </body>
 
 </html>

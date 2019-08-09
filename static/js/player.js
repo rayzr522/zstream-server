@@ -1,8 +1,60 @@
+/* global $ */
+
 function onClick(element, callback) {
     element.on({ 'click': callback, 'touchend': callback });
 }
 
-var player = {
+function fmtTime(input) {
+    // Handle invalid inputs
+    if (isNaN(input)) return '0:00';
+
+    let minutes = (input / 60).toFixed(0);
+    let seconds = (input % 60).toFixed(0);
+    // Zero-pad seconds
+    if (seconds.length < 2) seconds = '0' + seconds;
+    return minutes + ':' + seconds;
+}
+
+let songManager = {
+    init: function () {
+        let songs = [];
+
+        $('div.song').each(function () {
+            let song = $(this);
+            songs.push({
+                id: parseInt(song.attr('data-id')),
+                title: song.attr('data-title'),
+                artist: song.attr('data-artist'),
+                album: song.attr('data-album')
+            });
+        });
+
+        songs.forEach((song, i) => {
+            song.prev = songs[i - 1];
+            song.next = songs[i + 1];
+        });
+
+        this.songs = songs;
+    },
+    getSong: function (id) {
+        return this.songs.find(song => song.id === id);
+    },
+    resolveSong: function (input) {
+        if (input && input.id) {
+            // Probably already a song object, just return
+            return input;
+        }
+        return this.getSong(parseInt(input));
+    },
+    first: function () {
+        return this.songs[0];
+    },
+    last: function () {
+        return this.songs[this.songs.length - 1];
+    }
+};
+
+let player = {
     playURL: function (url) {
         this.context.attr('src', url);
     },
@@ -13,24 +65,30 @@ var player = {
         return this.raw().paused;
     },
     init: function () {
-        $('#controls').slideDown();
-
         this.context = $('#player');
+        // Simulate hitting the stop button to initialize everything properly
+        this.setCurrent();
 
-        this.context.on('canplay', this.startPlayer.bind(this))
-
-        this.context.on('timeupdate', function () {
-            var raw = this.raw();
-            $('.progress').css('width', (raw.currentTime / raw.duration * 100) + '%');
+        this.context.on('canplay', function () {
+            if (this.context.attr('src')) {
+                // Prevent the player from restarting when the stop button is pressed
+                this.startPlayer();
+            }
         }.bind(this));
 
-        onClick($('.progress-bar'), function (event) {
+        this.context.on('timeupdate', function () {
+            let raw = this.raw();
+            $('#track-progress').text(`${fmtTime(raw.currentTime)}/${fmtTime(raw.duration)}`);
+            this.setProgress(raw.currentTime / raw.duration * 100);
+        }.bind(this));
+
+        onClick($('.progress'), function (event) {
             // Handle click OR touch position
-            var off = event.originalEvent.touches
+            let off = event.originalEvent.touches
                 ? event.originalEvent.touches[0].pageX - $('.progress-bar').position().left
                 : event.originalEvent.offsetX;
             // Set the current play-time
-            this.raw().currentTime = off / $('.progress-bar').width() * this.raw().duration;
+            this.raw().currentTime = off / $('.progress').width() * this.raw().duration;
         }.bind(this));
 
         this.context.on('ended', function () {
@@ -41,9 +99,7 @@ var player = {
         $('#loading').animate({ 'opacity': 0 }, 300);
         $('#song-info').slideDown();
 
-        var title = this.current.attr('data-title');
-        var artist = this.current.attr('data-artist');
-        var album = this.current.attr('data-album');
+        let { title, artist, album } = this.current;
 
         $('#track-title').text(title);
         $('#track-artist').text(artist);
@@ -54,15 +110,36 @@ var player = {
         ui.get('ctrl-playpause').turnOff();
         this.raw().play();
     },
+    setProgress: function (percent) {
+        $('#song-progress').css('width', percent + '%');
+    },
+    setCurrent: function (song) {
+        if (!song) {
+            // Clear variable
+            this.current = null;
+
+            // Clear all audio settings
+            this.context.attr('src', null);
+            this.raw().currentTime = 0;
+            this.setProgress(0);
+
+            // Update UI to reflect state
+            $('.player-ctrl').attr('disabled', true);
+            $('#song-info').slideUp();
+        } else {
+            this.current = songManager.resolveSong(song);
+            $('.player-ctrl').attr('disabled', false);
+        }
+    },
     play: function (song) {
-        if (!this.context) this.init();
-        song = song || this.current;
+        // Get by ID
+        song = songManager.resolveSong(song) || this.current;
 
         if (this.compare(this.current, song)) {
             this.startPlayer();
         } else {
             this.pause();
-            this.playURL('/track/' + song.attr('data-id'));
+            this.playURL('/track/' + song.id);
 
             setTimeout(function () {
                 // Stupid client-side crap, PLAY THE DANG FILE
@@ -71,10 +148,8 @@ var player = {
 
             $('#loading').animate({ 'opacity': 1 }, 300);
 
-            if (this.current) this.current.find('.cover').removeClass('current-song');
-            song.find('.cover').addClass('current-song');
             this.last = this.current;
-            this.current = song;
+            this.setCurrent(song);
         }
     },
     pause: function () {
@@ -82,8 +157,9 @@ var player = {
         ui.get('ctrl-playpause').turnOn();
     },
     playPause: function (song) {
-        if (!this.context) this.init();
-        song = song || this.current;
+        // Get by ID
+        song = songManager.resolveSong(song) || this.current;
+
         if (this.compare(this.current, song)) {
             if (this.paused()) this.play(song);
             else this.pause();
@@ -93,36 +169,33 @@ var player = {
     },
     stop: function () {
         this.pause();
-        this.context.attr('src', null);
-        this.raw().currentTime = 0;
-        $('#song-info').slideUp();
+        // Clear song
+        this.setCurrent();
     },
     next: function () {
-        if (!this.context) this.init();
         if (!this.current) return;
-        if (this.current.index() < this.current.siblings().length)
-            this.play(this.current.next('.song'));
+        if (this.current.next)
+            this.play(this.current.next);
         else
-            this.play(this.current.siblings().first())
+            this.play(songManager.first());
     },
     previous: function () {
-        if (!this.context) this.init();
         if (!this.current) return;
-        if (this.current.index() > 0)
-            this.play(this.current.prev('.song'));
+        if (this.current.prev)
+            this.play(this.current.prev);
         else
-            this.play(this.current.siblings().last());
+            this.play(songManager.last());
     },
     compare: function (a, b) {
-        return a && b && a.attr('data-id') === b.attr('data-id');
+        return a && b && a.id === b.id;
     },
     button: function (id, method) {
         method = this[method].bind(this);
-        $("#ctrl-" + id).click(function () { method(); });
+        $('#ctrl-' + id).click(function () { method(); });
     }
-}
+};
 
-var ui = {
+const ui = {
     elements: [],
     get: function (id) {
         return this.elements.find(function (e) { return e.id === id; });
@@ -134,7 +207,7 @@ var ui = {
             on: false,
             setState: function (state) {
                 this.on = state;
-                this.e.removeClass(state ? off : on).addClass(state ? on : off);
+                this.e.children('i').text(state ? on : off);
             },
             turnOn: function () {
                 this.setState(true);
@@ -147,20 +220,18 @@ var ui = {
             }
         });
     }
-}
+};
 
 player.button('stop', 'stop');
 player.button('prev', 'previous');
 player.button('playpause', 'playPause');
 player.button('next', 'next');
 
-ui.toggler('ctrl-playpause', 'fa-play', 'fa-pause');
+ui.toggler('ctrl-playpause', 'play_arrow', 'pause');
 
 onClick($('.cover'), function () {
-    player.playPause($(this).parent());
+    // player.playPause($(this).parents('.song').attr('data-id'));
 });
 
-$('#songs').niceScroll({
-    cursorwidth: '0.5em',
-    cursorheight: '1.5em'
-});
+player.init();
+songManager.init();
