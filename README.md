@@ -6,13 +6,20 @@
 
 ## Installation
 
+If you want a static installation on your system, use the following:
 ```bash
-yarn global add zstream-server
+npm install -g zstream-server
 ```
+
+If you want a simple one-command solution for installing, updating, and running ZStream:
+```bash
+npx zstream-server
+```
+
 
 ## Usage
 
-To use ZStream, all you have to do is run the `zstream` command while inside a music folder. ZStream will attempt to extract metadata from the song files themselves, but if that fails, it resorts to the folder structure for extrapolating song information. In order for it to correctly identify your music, the folder structure should be as follows:
+To use ZStream, all you have to do is run the `zstream` (or `npx zstream-server`) command while inside a music folder. ZStream will attempt to extract metadata from the song files themselves, but if that fails, it resorts to the folder structure for extrapolating song information. In order for it to correctly identify your music, the folder structure should be as follows:
 
     root
     ├── Artist 1
@@ -28,7 +35,7 @@ To use ZStream, all you have to do is run the `zstream` command while inside a m
     │   └── ...
     └── ...
 
-Then you simply run `zstream` from within the root directory. All music will be automatically loaded and served to `127.0.0.1:3000`.
+Then you simply run `zstream` (or `npx zstream-server`) from within the root directory. All music will be automatically loaded and served to `127.0.0.1:3000`.
 
 ## Join Me
 
