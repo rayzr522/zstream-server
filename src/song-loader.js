@@ -1,8 +1,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const mm = require('musicmetadata');
-const mime = require('mime-types');
+const mm = require('music-metadata');
 const { info, warn, error, variable } = require('./debug');
 
 /**
@@ -25,8 +24,6 @@ const recurse = (folder, filter, depth = 2) => {
 
     return results;
 };
-
-const fetchMetadata = file => new Promise((resolve, reject) => mm(fs.createReadStream(file), (err, meta) => err ? reject(err) : resolve(meta)));
 
 module.exports = async base => {
     let songs = [];
@@ -54,7 +51,7 @@ module.exports = async base => {
             let meta = { artist: [] };
 
             try {
-                meta = await fetchMetadata(location);
+                meta = (await mm.parseFile(location)).common;
             } catch (err) {
                 if (err.message === 'Could not find metadata header') {
                     warn(`Could not find metadata for '${variable(file)}'`);
@@ -64,14 +61,14 @@ module.exports = async base => {
                 }
             }
 
-            let title = meta.title || (parts[2] ? parts[2].substr(0, parts[2].lastIndexOf('.')) : '') || path.basename(file);
-            let artist = meta.artist[0] || parts[0] || 'Unknown';
-            let album = meta.album || parts[1] || 'Unknown';
+            const title = meta.title || (parts[2] ? parts[2].substr(0, parts[2].lastIndexOf('.')) : '') || path.basename(file);
+            const artist = meta.artist || parts[0] || 'Unknown';
+            const album = meta.album || parts[1] || 'Unknown';
             let artwork = 'https://placehold.it/150x150';
 
             if (meta.picture && meta.picture.length > 0) {
                 artwork = {
-                    type: mime.lookup(meta.picture[0].format),
+                    type: meta.picture[0].format,
                     data: meta.picture[0].data
                 };
                 // artwork = `data:image/${meta.picture[0].format};base64,${meta.picture[0].data.toString('base64')}`;
