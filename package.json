@@ -44,5 +44,12 @@
   "devDependencies": {
     "eslint": "^4.19.1",
     "husky": "^1.0.0-rc.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rayzr522/zstream-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Rayzr522/zstream-server/issues"
   }
 }
