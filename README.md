@@ -7,15 +7,16 @@
 ## Installation
 
 If you want a static installation on your system, use the following:
+
 ```bash
 npm install -g zstream-server
 ```
 
 If you want a simple one-command solution for installing, updating, and running ZStream:
+
 ```bash
 npx zstream-server
 ```
-
 
 ## Usage
 
@@ -36,7 +37,3 @@ To use ZStream, all you have to do is run the `zstream` (or `npx zstream-server`
     └── ...
 
 Then you simply run `zstream` (or `npx zstream-server`) from within the root directory. All music will be automatically loaded and served to `127.0.0.1:3000`.
-
-## Join Me
-
-[![Discord Badge](https://github.com/Rayzr522/ProjectResources/raw/master/RayzrDev/badge-small.png)](https://discord.io/rayzrdevofficial)
